@@ -7,7 +7,7 @@ app.use(express.json());
 app.use(express.static('public'));
 
 // MongoDB Connection (Railway Environment Variable)
-const MONGODB_URI = process.env.MONGODB_URI || "your_mongodb_connection_string";
+const MONGODB_URI = process.env.MONGO_URL || "your_mongodb_connection_string";
 mongoose.connect(MONGODB_URI).then(() => console.log("MongoDB Connected"));
 
 // Product Schema
