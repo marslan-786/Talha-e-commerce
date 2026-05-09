@@ -44,6 +44,10 @@ app.post('/api/login', (req, res) => {
     else res.status(401).json({ success: false });
 });
 
+app.get('/category/:name', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public/category-view.html'));
+});
+
 app.get('/api/get-products', async (req, res) => res.json(await Product.find().sort({_id: -1})));
 
 app.post('/api/add-product', async (req, res) => {
