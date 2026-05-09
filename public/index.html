@@ -2,55 +2,96 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Caliber 7 Admin Access</title>
-    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="/style.css">
 </head>
 <body>
+    <!-- Sidebar Menu -->
+    <div id="sidebar" class="sidebar">
+        <h2 style="margin-bottom:30px;">Menu</h2>
+        <div id="categoryList"></div>
+        <hr style="margin:20px 0; opacity:0.1;">
+        <p style="margin-bottom:15px; color:#555;">Privacy Policy</p>
+        <p style="margin-bottom:15px; color:#555;">Help & Support</p>
+        <button onclick="toggleMenu()" style="margin-top:50px;">Close ×</button>
+    </div>
 
-    <div class="login-container">
-        <!-- VIP Branding Area -->
-        <div class="brand-section">
-            <h1 class="main-title">CALIBER 
-                <span class="animated-seven">
-                    <svg width="60" height="80" viewBox="0 0 100 120">
-                        <path d="M20 20 L80 20 L40 100" stroke-width="12" fill="none" stroke-linecap="round" />
-                    </svg>
-                </span>
-            </h1>
-            <p class="sub-title">PREMIUM E-COMMERCE PLATFORM</p>
+    <!-- Header -->
+    <div class="header">
+        <div style="font-size: 1.5rem; cursor:pointer;" onclick="toggleMenu()">☰</div>
+        <div class="brand-wrapper">
+            <span class="brand-title">CALIBER</span>
+            <svg class="seven-svg" width="30" height="40" viewBox="0 0 100 120"><path d="M20 20 L80 20 L40 100" /></svg>
         </div>
-
-        <!-- Open Style Login Form -->
-        <div class="login-form">
-            <input type="password" id="accessKey" placeholder="ENTER ACCESS KEY" />
-            <button onclick="attemptLogin()" id="loginBtn">VERIFY ACCESS</button>
-            <p id="errorMsg"></p>
+        <div style="display:flex; gap:15px; align-items:center;">
+            <div style="font-size: 1.2rem;">🔍</div>
+            <div class="cart-btn" onclick="window.location.href='/cart'">
+                <span style="font-size: 1.4rem;">🛒</span>
+                <span id="cartCount" class="cart-badge">0</span>
+            </div>
         </div>
     </div>
 
+    <!-- Filter & Title Section -->
+    <div class="filter-bar">
+        <h3 style="font-size: 0.9rem; color:#999;">LATEST ARRIVALS</h3>
+        <div style="font-size: 0.8rem; font-weight:700; border:1px solid #eee; padding:5px 12px; border-radius:20px;">FILTER ▽</div>
+    </div>
+
+    <!-- Main Grid -->
+    <div id="productGrid" class="product-grid"></div>
+
+    <!-- Footer -->
+    <footer class="vip-footer">
+        <div class="footer-links">
+            <span>Help</span> <span>Privacy</span> <span>Policy</span>
+        </div>
+        <p class="copy-text">© 2026 CALIBER 7. ALL RIGHTS RESERVED.</p>
+    </footer>
+
     <script>
-        async function attemptLogin() {
-            const key = document.getElementById('accessKey').value;
-            const btn = document.getElementById('loginBtn');
+        function toggleMenu() { document.getElementById('sidebar').classList.toggle('active'); }
+
+        async function loadData() {
+            const res = await fetch('/api/get-products');
+            const products = await res.json();
             
-            const response = await fetch('/api/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ accessKey: key })
-            });
+            // Categories نکالنا
+            const cats = [...new Set(products.map(p => p.category))];
+            document.getElementById('categoryList').innerHTML = cats.map(c => `<div style="margin-bottom:15px; font-weight:600; cursor:pointer;" onclick="filterCat('${c}')">${c.toUpperCase()}</div>`).join('');
 
-            const result = await response.json();
-
-            if (result.success) {
-                alert("Welcome, Admin!");
-                // یہاں سے ڈیش بورڈ پر بھیج دیں
-                window.location.href = "/admin-dashboard.html";
-            } else {
-                document.getElementById('errorMsg').innerText = result.message;
-                document.getElementById('accessKey').value = "";
-            }
+            // Products لوڈ کرنا
+            renderProducts(products);
         }
+
+        function renderProducts(data) {
+            document.getElementById('productGrid').innerHTML = data.map(p => `
+                <div class="product-card" onclick="window.location.href='/product/${p._id}'">
+                    <div class="img-container"><img src="${p.imageUrl}" class="product-img"></div>
+                    <div class="product-info">
+                        <div class="p-title">${p.title}</div>
+                        <p class="p-desc-short">${p.description}</p>
+                        <div class="p-price">Rs. ${p.price}</div>
+                        <div class="action-area" onclick="event.stopPropagation()">
+                            <button class="btn-edit" style="background:#000; color:#fff;" onclick="addToCart('${p._id}')">CART</button>
+                            <button class="btn-delete" style="background:#0070f3; color:#fff;">BUY</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function addToCart(id) {
+            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            cart.push(id);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            document.getElementById('cartCount').innerText = cart.length;
+        }
+
+        window.onload = () => {
+            loadData();
+            document.getElementById('cartCount').innerText = JSON.parse(localStorage.getItem('cart') || '[]').length;
+        };
     </script>
 </body>
 </html>
