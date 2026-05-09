@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head><link rel="stylesheet" href="/style.css"></head>
+<body>
+    <div class="header">
+        <div class="menu-icon">☰</div>
+        <div class="brand-wrapper">
+            <div><span class="brand-title">CALIBER</span><span class="sub-brand">LUXURY ADMIN</span></div>
+            <svg class="seven-svg" width="40" height="50" viewBox="0 0 100 120"><path d="M20 20 L80 20 L40 100" /></svg>
+        </div>
+    </div>
+
+    <div class="login-box">
+        <input type="password" id="keyInput" class="vip-input" placeholder="Enter Access Key">
+        <button onclick="login()" class="verify-btn">VERIFY ACCESS</button>
+    </div>
+
+    <script>
+        async function login() {
+            const res = await fetch('/api/login', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({accessKey: document.getElementById('keyInput').value})
+            });
+            if (res.ok) window.location.href = '/talia/products';
+            else alert("Wrong Key!");
+        }
+    </script>
+</body>
+</html>
