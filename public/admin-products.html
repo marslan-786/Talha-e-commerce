@@ -1,46 +1,47 @@
 <!DOCTYPE html>
-<html>
-<head><link rel="stylesheet" href="/style.css"></head>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="/style.css">
+</head>
 <body>
     <div class="header">
-        <div class="menu-icon" onclick="toggleMenu()">☰</div>
+        <div style="font-size: 1.5rem;">☰</div>
         <div class="brand-wrapper">
-            <div><span class="brand-title">CALIBER</span><span class="sub-brand">MANAGE PRODUCTS</span></div>
-            <svg class="seven-svg" width="40" height="50" viewBox="0 0 100 120"><path d="M20 20 L80 20 L40 100" /></svg>
+            <div><span class="brand-title">CALIBER</span><span class="sub-brand">PRODUCT LIST</span></div>
+            <svg class="seven-svg" width="35" height="45" viewBox="0 0 100 120"><path d="M20 20 L80 20 L40 100" /></svg>
         </div>
     </div>
 
     <div id="productGrid" class="product-grid"></div>
-
     <div class="fab" onclick="window.location.href='/talha/add-products'">+</div>
 
     <script>
         async function loadProducts() {
             const res = await fetch('/api/get-products');
             const products = await res.json();
-            const grid = document.getElementById('productGrid');
-            grid.innerHTML = products.map(p => `
+            document.getElementById('productGrid').innerHTML = products.map(p => `
                 <div class="product-card">
-                    <img src="${p.imageUrl}" class="product-img">
+                    <div class="img-container"><img src="${p.imageUrl}" class="product-img"></div>
                     <div class="product-info">
                         <div class="p-title">${p.title}</div>
-                        <div class="p-price">PKR ${p.price}</div>
-                        <div style="margin-top:10px; display:flex; gap:10px;">
-                            <button onclick="editP('${p._id}')" style="color:blue">Edit</button>
-                            <button onclick="deleteP('${p._id}')" style="color:red">Delete</button>
+                        <div class="p-price">Rs. ${p.price}</div>
+                        <div class="action-area">
+                            <button class="btn-edit">EDIT</button>
+                            <button onclick="deleteP('${p._id}')" class="btn-delete">DELETE</button>
                         </div>
                     </div>
                 </div>
             `).join('');
         }
-        loadProducts();
-
         async function deleteP(id) {
-            if(confirm("Delete this?")) {
+            if(confirm("Delete this product?")) {
                 await fetch('/api/delete-product/'+id, {method:'DELETE'});
                 loadProducts();
             }
         }
+        loadProducts();
     </script>
 </body>
 </html>
