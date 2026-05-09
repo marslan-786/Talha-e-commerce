@@ -23,6 +23,21 @@ app.get('/talha/add-products', (req, res) => res.sendFile(path.join(__dirname, '
 // ہوم پیج (ڈیش بورڈ)
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'public/index.html')));
 
+
+// 1. ایڈٹ پیج کو سرو کرنے کا روٹ
+app.get('/talha/edit-product/:id', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public/edit-product.html'));
+});
+
+// 2. ڈیٹا اپڈیٹ کرنے کی API (PUT Method)
+app.put('/api/update-product/:id', async (req, res) => {
+    try {
+        await Product.findByIdAndUpdate(req.params.id, req.body);
+        res.json({ success: true, message: "VIP Product Updated!" });
+    } catch (error) {
+        res.status(500).json({ error: "Update failed" });
+    }
+});
 // پروڈکٹ ڈیٹیل پیج (روٹ میں ID جائے گی)
 app.get('/product/:id', (req, res) => res.sendFile(path.join(__dirname, 'public/product-view.html')));
 
