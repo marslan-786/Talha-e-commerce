@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Checkout | Caliber 7 Luxury</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap');
+        body { background-color: #ffffff; color: #1a1a1a; font-family: 'Plus Jakarta Sans', sans-serif; }
+
+        .premium-logo-text { 
+            background: linear-gradient(270deg, #ff0055, #0070f3, #000, #ff0055); 
+            background-size: 300% 300%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
+            animation: color-shift 4s ease infinite; 
+        }
+        @keyframes color-shift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
+        /* Input VIP Styling */
+        .vip-input {
+            width: 100%; padding: 12px 15px; border-radius: 12px; border: 1.5px solid #f0f0f0;
+            background: #fafafa; outline: none; transition: 0.3s; font-size: 0.9rem;
+        }
+        .vip-input:focus { border-color: #000; background: #fff; box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+
+        /* Loader Animation */
+        .spinner {
+            width: 24px; height: 24px; border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%; border-top-color: #fff; animation: spin 0.8s linear infinite;
+            display: none;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Summary Card */
+        .summary-box { background: #fff; border: 1px solid #f3f4f6; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+    <header class="bg-white border-b border-gray-100 p-5 flex justify-center items-center gap-2">
+        <h1 class="premium-logo-text text-2xl font-black">CALIBER 7</h1>
+        <p class="text-[10px] font-bold text-gray-400 tracking-widest mt-1">SECURE CHECKOUT</p>
+    </header>
+
+    <main class="max-w-5xl mx-auto p-4 md:p-10 flex flex-col md:flex-row gap-8">
+        
+        <!-- Left Side: Form Details -->
+        <div class="flex-1 bg-white p-6 md:p-10 rounded-[30px] shadow-sm border border-gray-100">
+            <h2 class="text-xl font-extrabold mb-8 flex items-center gap-3">
+                <i class="fa-solid fa-truck-fast text-blue-600"></i> SHIPPING DETAILS
+            </h2>
+            
+            <form id="orderForm" class="space-y-5">
+                <div class="grid grid-cols-2 gap-4">
+                    <div><label class="text-[10px] font-bold text-gray-400 ml-2 uppercase">First Name</label><input type="text" class="vip-input" required></div>
+                    <div><label class="text-[10px] font-bold text-gray-400 ml-2 uppercase">Last Name</label><input type="text" class="vip-input" required></div>
+                </div>
+                <div><label class="text-[10px] font-bold text-gray-400 ml-2 uppercase">Email Address</label><input type="email" class="vip-input" required></div>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div><label class="text-[10px] font-bold text-gray-400 ml-2 uppercase">Country</label><input type="text" value="Pakistan" readonly class="vip-input bg-gray-100 cursor-not-allowed"></div>
+                    <div><label class="text-[10px] font-bold text-gray-400 ml-2 uppercase">City</label><input type="text" class="vip-input" required></div>
+                </div>
+                
+                <div><label class="text-[10px] font-bold text-gray-400 ml-2 uppercase">Full Shipping Address</label><textarea class="vip-input h-24" required></textarea></div>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div><label class="text-[10px] font-bold text-gray-400 ml-2 uppercase">Post Code</label><input type="text" class="vip-input" required></div>
+                    <div><label class="text-[10px] font-bold text-gray-400 ml-2 uppercase">Phone Number</label><input type="tel" class="vip-input" required></div>
+                </div>
+
+                <div class="bg-blue-50 p-5 rounded-2xl border border-blue-100 flex items-center gap-4 mt-8">
+                    <i class="fa-solid fa-hand-holding-dollar text-2xl text-blue-600"></i>
+                    <div>
+                        <h4 class="font-bold text-blue-900 text-sm uppercase">Payment Method</h4>
+                        <p class="text-blue-700 text-xs font-semibold">CASH ON DELIVERY (COD)</p>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Right Side: Product Summary -->
+        <div class="w-full md:w-[380px] space-y-6">
+            <div class="summary-box p-6">
+                <h3 class="font-black text-sm mb-6 uppercase tracking-widest border-b pb-4">Order Summary</h3>
+                
+                <!-- Small Product Info -->
+                <div class="flex gap-4 mb-8">
+                    <img id="sumImg" src="" class="w-20 h-20 object-cover rounded-xl border border-gray-100">
+                    <div class="flex flex-col justify-center">
+                        <h4 id="sumTitle" class="font-bold text-sm truncate w-40 uppercase">Loading...</h4>
+                        <p id="sumDesc" class="text-[10px] text-gray-400 line-clamp-1 mb-2">Details...</p>
+                        <span id="sumPrice" class="font-black text-sm text-black">Rs. 0</span>
+                    </div>
+                </div>
+
+                <!-- Math Calculation -->
+                <div class="space-y-4 border-t pt-6 text-sm">
+                    <div class="flex justify-between text-gray-500 font-medium"><span>Subtotal</span><span id="calcSubtotal">Rs. 0</span></div>
+                    <div class="flex justify-between text-gray-500 font-medium"><span>Shipping Fee</span><span id="calcShipping">Rs. 0</span></div>
+                    <div class="flex justify-between text-gray-500 font-medium"><span>Processing Tax</span><span id="calcTax">Rs. 0</span></div>
+                    <div class="flex justify-between border-t pt-4 text-lg font-black text-black"><span>Total Bill</span><span id="calcTotal">Rs. 0</span></div>
+                </div>
+
+                <button id="placeOrderBtn" onclick="processOrder()" class="w-full bg-black text-white py-5 rounded-2xl font-black mt-8 hover:bg-gray-900 transition-all flex items-center justify-center gap-3 shadow-xl">
+                    <span id="btnText">PLACE ORDER</span>
+                    <div id="btnLoader" class="spinner"></div>
+                </button>
+            </div>
+            
+            <p class="text-[10px] text-center text-gray-400 font-bold px-4 uppercase leading-relaxed">
+                <i class="fa-solid fa-shield-check mr-1"></i> Your personal data will be used to process your order as per our Caliber 7 privacy policy.
+            </p>
+        </div>
+    </main>
+
+    <script>
+        let productPrice = 0;
+
+        async function loadSummary() {
+            // URL سے آئی ڈی نکالنا
+            const pathParts = window.location.pathname.split('/');
+            const id = pathParts[pathParts.length - 1];
+
+            const res = await fetch('/api/product/' + id);
+            const p = await res.json();
+
+            if(p) {
+                document.getElementById('sumImg').src = p.imageUrl;
+                document.getElementById('sumTitle').innerText = p.title;
+                document.getElementById('sumDesc').innerText = p.description;
+                document.getElementById('sumPrice').innerText = `Rs. ${p.price}`;
+                
+                productPrice = p.price;
+                calculateBill();
+            }
+        }
+
+        function calculateBill() {
+            // رینڈم ڈیلیوری (300 سے 500)
+            const shipping = Math.floor(Math.random() * (500 - 300 + 1)) + 300;
+            // رینڈم ٹیکس (50 سے 100)
+            const tax = Math.floor(Math.random() * (100 - 50 + 1)) + 50;
+            const total = productPrice + shipping + tax;
+
+            document.getElementById('calcSubtotal').innerText = `Rs. ${productPrice}`;
+            document.getElementById('calcShipping').innerText = `Rs. ${shipping}`;
+            document.getElementById('calcTax').innerText = `Rs. ${tax}`;
+            document.getElementById('calcTotal').innerText = `Rs. ${total}`;
+        }
+
+        async function processOrder() {
+            const btnText = document.getElementById('btnText');
+            const btnLoader = document.getElementById('btnLoader');
+            const btn = document.getElementById('placeOrderBtn');
+
+            // فارم ویلیڈیشن (بنیادی)
+            const form = document.getElementById('orderForm');
+            if(!form.checkValidity()) {
+                alert("Please fill all required fields correctly!");
+                return;
+            }
+
+            // اینیمیشن شروع
+            btnText.innerText = "PROCESSING...";
+            btnLoader.style.display = "block";
+            btn.disabled = true;
+            btn.style.opacity = "0.7";
+
+            // 3 سیکنڈ کا انتظار (سیولیشن)
+            setTimeout(() => {
+                // یہاں آپ چاہیں تو آرڈر ڈیٹا بیس میں بھیجنے کی API کال بھی کر سکتے ہیں
+                alert("Order Successfully Placed! ✅");
+                window.location.href = "/"; // ڈیش بورڈ پر واپسی
+            }, 3000);
+        }
+
+        window.onload = loadSummary;
+    </script>
+</body>
+</html>
