@@ -3,45 +3,175 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <link rel="stylesheet" href="/style.css">
+    <title>Manage Inventory | Caliber 7 Admin</title>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap');
+
+        /* --- Global Reset --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background-color: #ffffff; color: #1a1a1a; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+
+        /* --- Header --- */
+        .header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 20px; position: sticky; top: 0; background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px); z-index: 1000; border-bottom: 1px solid #f2f2f2;
+        }
+
+        .brand-wrapper { display: flex; align-items: center; gap: 8px; }
+        
+        .brand-title { 
+            font-size: 1.4rem; font-weight: 800; letter-spacing: 1px;
+            background: linear-gradient(270deg, #ff0055, #0070f3, #000, #ff0055);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: color-shift 4s ease infinite;
+        }
+        @keyframes color-shift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
+        .sub-brand { font-size: 0.55rem; color: #999; display: block; letter-spacing: 1px; margin-top: -4px; font-weight: 700; }
+
+        /* --- Animated SVG 7 --- */
+        .seven-svg path {
+            stroke: #000; fill: none; stroke-width: 10; stroke-linecap: round;
+            animation: drawColor 3s infinite alternate ease-in-out;
+        }
+        @keyframes drawColor { 0% { stroke: #ff0055; stroke-dasharray: 100; stroke-dashoffset: 100; } 100% { stroke: #0070f3; stroke-dashoffset: 0; } }
+
+        /* --- Product Grid --- */
+        .product-grid { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 15px; 
+            padding: 15px; 
+        }
+        @media (min-width: 1024px) { 
+            .product-grid { grid-template-columns: repeat(5, 1fr); gap: 25px; padding: 30px; } 
+        }
+
+        /* --- Product Card (VIP Style) --- */
+        .product-card { 
+            background: #fff; border-radius: 18px; border: 1px solid #f2f2f2; 
+            box-shadow: 0 10px 20px rgba(0,0,0,0.02); transition: all 0.3s ease;
+            overflow: hidden;
+        }
+        .product-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.08); }
+
+        .img-container { width: 100%; aspect-ratio: 1/1; overflow: hidden; background: #fafafa; }
+        .product-img { width: 100%; height: 100%; object-fit: cover; }
+
+        .product-info { padding: 12px; }
+        .p-title { font-weight: 700; font-size: 0.85rem; margin-bottom: 4px; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+        .p-price { font-weight: 800; font-size: 0.95rem; color: #000; margin-bottom: 10px; }
+
+        /* --- Action Buttons --- */
+        .action-area { display: flex; gap: 6px; }
+        .btn-edit, .btn-delete { 
+            flex: 1; border: none; padding: 10px; border-radius: 10px; 
+            font-size: 0.7rem; font-weight: 800; cursor: pointer; transition: 0.2s; 
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .btn-edit { background: #f0f7ff; color: #0070f3; }
+        .btn-delete { background: #fff0f3; color: #ff0055; }
+        
+        .btn-edit:hover { background: #0070f3; color: #fff; }
+        .btn-delete:hover { background: #ff0055; color: #fff; }
+        .btn-edit:active, .btn-delete:active { transform: scale(0.95); }
+
+        /* --- Floating Action Button (FAB) --- */
+        .fab {
+            position: fixed; bottom: 25px; right: 25px; background: #000; color: #fff;
+            width: 60px; height: 60px; border-radius: 50%; display: flex; justify-content: center;
+            align-items: center; font-size: 2rem; cursor: pointer; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.25); z-index: 100;
+            transition: 0.3s;
+        }
+        .fab:hover { transform: scale(1.1) rotate(90deg); background: #222; }
+    </style>
 </head>
 <body>
+
     <div class="header">
-        <div style="font-size: 1.5rem;">☰</div>
+        <div style="font-size: 1.5rem; cursor: pointer;" onclick="window.location.href='/'">☰</div>
         <div class="brand-wrapper">
-            <div><span class="brand-title">CALIBER</span><span class="sub-brand">PRODUCT LIST</span></div>
-            <svg class="seven-svg" width="35" height="45" viewBox="0 0 100 120"><path d="M20 20 L80 20 L40 100" /></svg>
+            <div>
+                <span class="brand-title">CALIBER</span>
+                <span class="sub-brand">PRODUCT LIST</span>
+            </div>
+            <svg class="seven-svg" width="35" height="45" viewBox="0 0 100 120">
+                <path d="M20 20 L80 20 L40 100" />
+            </svg>
         </div>
     </div>
 
-    <div id="productGrid" class="product-grid"></div>
+    <div id="productGrid" class="product-grid">
+        <!-- Products will load here -->
+        <div style="grid-column: 1/-1; text-align: center; padding: 50px; color: #ccc; font-weight: 700; text-transform: uppercase; letter-spacing: 2px;">
+            Scanning Vault...
+        </div>
+    </div>
+
+    <!-- Add Product FAB -->
     <div class="fab" onclick="window.location.href='/talha/add-products'">+</div>
 
     <script>
+        // ڈیٹا لوڈ کرنے کا فنکشن
         async function loadProducts() {
-            const res = await fetch('/api/get-products');
-            const products = await res.json();
-            document.getElementById('productGrid').innerHTML = products.map(p => `
-                <div class="product-card">
-                    <div class="img-container"><img src="${p.imageUrl}" class="product-img"></div>
-                    <div class="product-info">
-                        <div class="p-title">${p.title}</div>
-                        <div class="p-price">Rs. ${p.price}</div>
-                        <div class="action-area">
-                            <button class="btn-edit">EDIT</button>
-                            <button onclick="deleteP('${p._id}')" class="btn-delete">DELETE</button>
+            try {
+                const res = await fetch('/api/get-products');
+                const products = await res.json();
+                const grid = document.getElementById('productGrid');
+                
+                if(products.length === 0) {
+                    grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 50px; color: #999;">No products in inventory.</div>`;
+                    return;
+                }
+
+                grid.innerHTML = products.map(p => `
+                    <div class="product-card">
+                        <div class="img-container">
+                            <img src="${p.imageUrl}" class="product-img" loading="lazy">
+                        </div>
+                        <div class="product-info">
+                            <div class="p-title">${p.title}</div>
+                            <div class="p-price">Rs. ${p.price}</div>
+                            <div class="action-area">
+                                <button onclick="editP('${p._id}')" class="btn-edit">EDIT</button>
+                                <button onclick="deleteP('${p._id}')" class="btn-delete">DELETE</button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            `).join('');
-        }
-        async function deleteP(id) {
-            if(confirm("Delete this product?")) {
-                await fetch('/api/delete-product/'+id, {method:'DELETE'});
-                loadProducts();
+                `).join('');
+            } catch (error) {
+                console.error("Error loading products:", error);
             }
         }
-        loadProducts();
+
+        // ایڈٹ بٹن کا فنکشن (ریل روٹ کے ساتھ)
+        function editP(id) {
+            window.location.href = '/talha/edit-product/' + id;
+        }
+
+        // ڈیلیٹ بٹن کا فنکشن
+        async function deleteP(id) {
+            if(confirm("VIP Warning: Are you sure you want to delete this item?")) {
+                try {
+                    const res = await fetch('/api/delete-product/' + id, { method: 'DELETE' });
+                    if(res.ok) {
+                        loadProducts();
+                    } else {
+                        alert("Error deleting product!");
+                    }
+                } catch (error) {
+                    alert("Connection error!");
+                }
+            }
+        }
+
+        // پیج لوڈ ہوتے ہی فنکشن چلائیں
+        window.onload = loadProducts;
     </script>
 </body>
 </html>
