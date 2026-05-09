@@ -1,28 +1,32 @@
 <!DOCTYPE html>
-<html>
-<head><link rel="stylesheet" href="/style.css"></head>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="/style.css">
+</head>
 <body>
     <div class="header">
-        <div class="menu-icon">☰</div>
+        <div onclick="history.back()" style="font-size: 1.5rem; cursor: pointer;">←</div>
         <div class="brand-wrapper">
-            <div><span class="brand-title">CALIBER</span><span class="sub-brand">ADD PRODUCT</span></div>
-            <svg class="seven-svg" width="40" height="50" viewBox="0 0 100 120"><path d="M20 20 L80 20 L40 100" /></svg>
+            <div><span class="brand-title">CALIBER</span><span class="sub-brand">NEW PRODUCT</span></div>
+            <svg class="seven-svg" width="35" height="45" viewBox="0 0 100 120"><path d="M20 20 L80 20 L40 100" /></svg>
         </div>
     </div>
 
-    <div style="max-width: 500px; margin: 40px auto; padding: 20px;">
-        <div id="previewBox" style="width:100%; height:250px; border:1px solid #eee; margin-bottom:20px; border-radius:15px; display:flex; align-items:center; justify-content:center; overflow:hidden;">
-            <img id="prevImg" src="" style="max-width:100%; max-height:100%; display:none;">
-            <span id="prevText">Image Preview</span>
+    <div style="padding: 20px; max-width: 600px; margin: 0 auto;">
+        <div id="previewBox" style="width:100%; aspect-ratio: 16/9; border: 2px dashed #eee; border-radius: 15px; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #fafafa;">
+            <img id="prevImg" style="width:100%; height:100%; object-fit: contain; display: none;">
+            <span id="prevText" style="color: #ccc;">Live Image Preview</span>
         </div>
-        
-        <input type="text" id="imgUrl" class="vip-input" style="width:100%; border-radius:10px; text-align:left; padding-left:15px;" placeholder="Image URL" oninput="showPrev(this.value)">
-        <input type="text" id="title" class="vip-input" style="width:100%; margin-top:15px; border-radius:10px; text-align:left; padding-left:15px;" placeholder="Product Name">
-        <textarea id="desc" class="vip-input" style="width:100%; margin-top:15px; border-radius:10px; text-align:left; padding-left:15px; height:100px;" placeholder="Product Details"></textarea>
-        <input type="number" id="price" class="vip-input" style="width:100%; margin-top:15px; border-radius:10px; text-align:left; padding-left:15px;" placeholder="Price (PKR)">
-        <input type="text" id="cat" class="vip-input" style="width:100%; margin-top:15px; border-radius:10px; text-align:left; padding-left:15px;" placeholder="Category">
 
-        <button onclick="addProduct()" class="verify-btn" style="width:100%">PUBLISH PRODUCT</button>
+        <input type="text" id="imgUrl" class="vip-input" placeholder="Paste Image URL" oninput="showPrev(this.value)">
+        <input type="text" id="title" class="vip-input" placeholder="Product Title">
+        <textarea id="desc" class="vip-input" style="height: 100px; padding-top: 12px;" placeholder="Product Description"></textarea>
+        <input type="number" id="price" class="vip-input" placeholder="Price (PKR)">
+        <input type="text" id="cat" class="vip-input" placeholder="Category (e.g. Fashion)">
+
+        <button onclick="saveProduct()" class="verify-btn" style="border-radius: 12px; margin-top: 10px;">PUBLISH TO STORE</button>
     </div>
 
     <script>
@@ -30,9 +34,9 @@
             const img = document.getElementById('prevImg');
             const txt = document.getElementById('prevText');
             if(url) { img.src = url; img.style.display='block'; txt.style.display='none'; }
+            else { img.style.display='none'; txt.style.display='block'; }
         }
-
-        async function addProduct() {
+        async function saveProduct() {
             const data = {
                 title: document.getElementById('title').value,
                 description: document.getElementById('desc').value,
@@ -40,12 +44,12 @@
                 imageUrl: document.getElementById('imgUrl').value,
                 category: document.getElementById('cat').value
             };
+            if(!data.title || !data.price || !data.imageUrl) return alert("Please fill all fields!");
             await fetch('/api/add-product', {
                 method: 'POST',
                 headers: {'Content-Type':'application/json'},
                 body: JSON.stringify(data)
             });
-            alert("Published!");
             window.location.href = '/talha/products';
         }
     </script>
