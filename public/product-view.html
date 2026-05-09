@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <div class="header">
+        <div onclick="history.back()" style="font-size: 1.5rem;">←</div>
+        <div class="brand-wrapper"><span class="brand-title">CALIBER</span><svg class="seven-svg" width="30" height="40" viewBox="0 0 100 120"><path d="M20 20 L80 20 L40 100" /></svg></div>
+        <div style="font-size: 1.2rem;">🛒</div>
+    </div>
+
+    <div id="productDetail" style="padding: 20px;">
+        <!-- Data will load here -->
+    </div>
+
+    <script>
+        async function loadDetail() {
+            const id = window.location.pathname.split('/').pop();
+            const res = await fetch('/api/product/' + id);
+            const p = await res.json();
+
+            document.getElementById('productDetail').innerHTML = `
+                <img src="${p.imageUrl}" style="width:100%; border-radius:20px; box-shadow:0 10px 30px rgba(0,0,0,0.1);">
+                <h1 style="margin-top:20px;">${p.title}</h1>
+                <p style="color:#2ecc71; font-weight:800; font-size:1.5rem; margin:10px 0;">Rs. ${p.price}</p>
+                <p style="color:#666; line-height:1.6;">${p.description}</p>
+                <div style="display:flex; gap:15px; margin-top:30px;">
+                    <button class="verify-btn" style="flex:1">ADD TO CART</button>
+                    <button class="verify-btn" style="flex:1; background:#0070f3;">BUY NOW</button>
+                </div>
+            `;
+        }
+        loadDetail();
+    </script>
+</body>
+</html>
