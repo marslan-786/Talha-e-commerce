@@ -77,5 +77,17 @@ app.delete('/api/delete-product/:id', async (req, res) => {
     res.json({ success: true });
 });
 
+// اس روٹ کا ہونا لازمی ہے تاکہ فرنٹ اینڈ کو ڈیٹا ملے
+app.get('/api/category/:name', async (req, res) => {
+    try {
+        const categoryName = req.params.name;
+        // ڈیٹا بیس میں اس کیٹیگری کے پروڈکٹس ڈھونڈیں
+        const products = await Product.find({ category: categoryName });
+        res.json(products);
+    } catch (error) {
+        res.status(500).json({ error: "Failed to fetch products" });
+    }
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
