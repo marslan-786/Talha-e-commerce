@@ -40,8 +40,20 @@ app.get('/category/:name', (req, res) => {
 });
 
 // بائی پیج کا روٹ (جس کی فائل ہم اب بنائیں گے)
-app.get('/buy/:id', (req, res) => {
+// بائے پیج کا روٹ (ملٹیپل IDs کے لیے)
+app.get('/buy/:ids', (req, res) => {
     res.sendFile(path.join(__dirname, 'public/buy-page.html'));
+});
+
+// ملٹیپل پروڈکٹس کا ڈیٹا حاصل کرنے کے لیے نئی API
+app.post('/api/products/bulk', async (req, res) => {
+    try {
+        const { ids } = req.body; // IDs کی لسٹ (Array)
+        const products = await Product.find({ _id: { $in: ids } });
+        res.json(products);
+    } catch (error) {
+        res.status(500).json({ error: "Bulk fetch failed" });
+    }
 });
 // --- API ---
 app.post('/api/login', (req, res) => {
