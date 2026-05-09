@@ -34,9 +34,14 @@ app.get('/api/product/:id', async (req, res) => {
     res.json(await Product.findById(req.params.id));
 });
 
-// API: کیٹیگری کے حساب سے پروڈکٹ
-app.get('/api/category/:name', async (req, res) => {
-    res.json(await Product.find({ category: req.params.name }));
+// کیٹیگری پیج کا روٹ
+app.get('/category/:name', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public/category-view.html'));
+});
+
+// بائی پیج کا روٹ (جس کی فائل ہم اب بنائیں گے)
+app.get('/buy/:id', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public/buy-page.html'));
 });
 // --- API ---
 app.post('/api/login', (req, res) => {
