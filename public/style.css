@@ -1,0 +1,110 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;700&display=swap');
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #ffffff;
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    color: #000;
+}
+
+.login-container {
+    text-align: center;
+    width: 100%;
+    max-width: 400px;
+}
+
+/* Multi-color Animated Title */
+.main-title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    letter-spacing: 5px;
+    margin-bottom: 0;
+    background: linear-gradient(90deg, #000, #ff0055, #0070f3, #000);
+    background-size: 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientText 5s ease infinite;
+}
+
+@keyframes gradientText {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.sub-title {
+    font-size: 0.75rem;
+    letter-spacing: 3px;
+    color: #888;
+    margin-top: 5px;
+    font-weight: 300;
+}
+
+/* Animated SVG Seven */
+.animated-seven svg path {
+    stroke: #000;
+    animation: colorShift 3s infinite alternate ease-in-out, dash 2s infinite;
+    stroke-dasharray: 200;
+    stroke-dashoffset: 200;
+}
+
+@keyframes colorShift {
+    0% { stroke: #ff0055; }
+    50% { stroke: #0070f3; }
+    100% { stroke: #000000; }
+}
+
+@keyframes dash {
+    to { stroke-dashoffset: 0; }
+}
+
+/* Open Input Design (No Card) */
+.login-form {
+    margin-top: 50px;
+}
+
+#accessKey {
+    width: 100%;
+    padding: 15px 0;
+    border: none;
+    border-bottom: 2px solid #eee;
+    font-size: 1rem;
+    text-align: center;
+    outline: none;
+    transition: border-color 0.3s;
+    background: transparent;
+    letter-spacing: 2px;
+}
+
+#accessKey:focus {
+    border-bottom-color: #000;
+}
+
+#loginBtn {
+    margin-top: 30px;
+    background: #000;
+    color: #fff;
+    border: none;
+    padding: 15px 40px;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 2px;
+    transition: all 0.3s;
+}
+
+#loginBtn:hover {
+    background: #333;
+    letter-spacing: 4px;
+}
+
+#errorMsg {
+    color: #ff0055;
+    font-size: 0.8rem;
+    margin-top: 15px;
+    font-weight: bold;
+}
