@@ -19,7 +19,25 @@ const Product = mongoose.model('Product', productSchema);
 app.get('/talha', (req, res) => res.sendFile(path.join(__dirname, 'public/admin-login.html')));
 app.get('/talha/products', (req, res) => res.sendFile(path.join(__dirname, 'public/admin-products.html')));
 app.get('/talha/add-products', (req, res) => res.sendFile(path.join(__dirname, 'public/admin-add.html')));
+// --- USER ROUTES ---
+// ہوم پیج (ڈیش بورڈ)
+app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'public/index.html')));
 
+// پروڈکٹ ڈیٹیل پیج (روٹ میں ID جائے گی)
+app.get('/product/:id', (req, res) => res.sendFile(path.join(__dirname, 'public/product-view.html')));
+
+// کارٹ پیج
+app.get('/cart', (req, res) => res.sendFile(path.join(__dirname, 'public/cart.html')));
+
+// API: سنگل پروڈکٹ حاصل کرنے کے لیے
+app.get('/api/product/:id', async (req, res) => {
+    res.json(await Product.findById(req.params.id));
+});
+
+// API: کیٹیگری کے حساب سے پروڈکٹ
+app.get('/api/category/:name', async (req, res) => {
+    res.json(await Product.find({ category: req.params.name }));
+});
 // --- API ---
 app.post('/api/login', (req, res) => {
     if (req.body.accessKey === "talha12") res.json({ success: true });
