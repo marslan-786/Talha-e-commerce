@@ -3,40 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <link rel="stylesheet" href="/style.css">
+    <title>Add New Product | Caliber 7 Admin</title>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap');
+
+        /* --- Reset & Base --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background-color: #ffffff; color: #1a1a1a; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+
+        /* --- Header Styling --- */
+        .header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 20px; position: sticky; top: 0; background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px); z-index: 1000; border-bottom: 1px solid #f2f2f2;
+        }
+
+        .brand-wrapper { display: flex; align-items: center; gap: 8px; }
+        
+        .brand-title { 
+            font-size: 1.4rem; font-weight: 800; letter-spacing: 1px;
+            background: linear-gradient(270deg, #ff0055, #0070f3, #000, #ff0055);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: color-shift 4s ease infinite;
+        }
+        @keyframes color-shift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
+        .sub-brand { font-size: 0.55rem; color: #999; display: block; letter-spacing: 1px; margin-top: -4px; font-weight: 700; }
+
+        /* --- Animated SVG 7 --- */
+        .seven-svg path {
+            stroke: #000; fill: none; stroke-width: 10; stroke-linecap: round;
+            animation: drawColor 3s infinite alternate ease-in-out;
+        }
+        @keyframes drawColor { 0% { stroke: #ff0055; stroke-dasharray: 100; stroke-dashoffset: 100; } 100% { stroke: #0070f3; stroke-dashoffset: 0; } }
+
+        /* --- Form Styling --- */
+        .form-container { padding: 20px; max-width: 600px; margin: 0 auto; }
+
+        .preview-box {
+            width: 100%; aspect-ratio: 16/9; border: 2px dashed #eee; border-radius: 20px;
+            margin-bottom: 25px; display: flex; align-items: center; justify-content: center;
+            overflow: hidden; background: #fafafa; transition: 0.3s;
+        }
+        .preview-box:hover { border-color: #0070f3; background: #fff; }
+
+        .vip-input {
+            width: 100%; padding: 15px 20px; border-radius: 15px; border: 1.5px solid #f0f0f0;
+            margin-bottom: 15px; outline: none; font-size: 0.95rem; background: #fafafa; transition: 0.3s;
+            font-weight: 600;
+        }
+        .vip-input:focus { border-color: #000; background: #fff; box-shadow: 0 8px 25px rgba(0,0,0,0.05); }
+
+        .verify-btn {
+            width: 100%; background: #000; color: #fff; border: none; padding: 16px;
+            border-radius: 50px; font-weight: 800; cursor: pointer; transition: 0.3s;
+            letter-spacing: 1px; text-transform: uppercase; margin-top: 10px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .verify-btn:hover { background: #222; transform: translateY(-2px); box-shadow: 0 15px 30px rgba(0,0,0,0.15); }
+        .verify-btn:active { transform: scale(0.98); }
+
+        .back-btn { font-size: 1.5rem; color: #000; text-decoration: none; padding: 5px; }
+    </style>
 </head>
 <body>
+
     <div class="header">
-        <div onclick="history.back()" style="font-size: 1.5rem; cursor: pointer;">←</div>
+        <a href="javascript:history.back()" class="back-btn">←</a>
         <div class="brand-wrapper">
-            <div><span class="brand-title">CALIBER</span><span class="sub-brand">NEW PRODUCT</span></div>
-            <svg class="seven-svg" width="35" height="45" viewBox="0 0 100 120"><path d="M20 20 L80 20 L40 100" /></svg>
+            <div>
+                <span class="brand-title">CALIBER</span>
+                <span class="sub-brand">NEW PRODUCT</span>
+            </div>
+            <svg class="seven-svg" width="35" height="45" viewBox="0 0 100 120">
+                <path d="M20 20 L80 20 L40 100" />
+            </svg>
         </div>
     </div>
 
-    <div style="padding: 20px; max-width: 600px; margin: 0 auto;">
-        <div id="previewBox" style="width:100%; aspect-ratio: 16/9; border: 2px dashed #eee; border-radius: 15px; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #fafafa;">
+    <div class="form-container">
+        <!-- Live Image Preview Box -->
+        <div id="previewBox" class="preview-box">
             <img id="prevImg" style="width:100%; height:100%; object-fit: contain; display: none;">
-            <span id="prevText" style="color: #ccc;">Live Image Preview</span>
+            <span id="prevText" style="color: #ccc; font-weight: 700; font-size: 0.8rem; letter-spacing: 1px; text-transform: uppercase;">
+                <i class="fa-solid fa-image"></i> Live Image Preview
+            </span>
         </div>
 
+        <!-- Input Fields -->
         <input type="text" id="imgUrl" class="vip-input" placeholder="Paste Image URL" oninput="showPrev(this.value)">
         <input type="text" id="title" class="vip-input" placeholder="Product Title">
-        <textarea id="desc" class="vip-input" style="height: 100px; padding-top: 12px;" placeholder="Product Description"></textarea>
-        <input type="number" id="price" class="vip-input" placeholder="Price (PKR)">
-        <input type="text" id="cat" class="vip-input" placeholder="Category (e.g. Fashion)">
+        <textarea id="desc" class="vip-input" style="height: 120px; padding-top: 15px; resize: none;" placeholder="Product Description"></textarea>
+        
+        <div style="display: flex; gap: 10px;">
+            <input type="number" id="price" class="vip-input" placeholder="Price (PKR)">
+            <input type="text" id="cat" class="vip-input" placeholder="Category">
+        </div>
 
-        <button onclick="saveProduct()" class="verify-btn" style="border-radius: 12px; margin-top: 10px;">PUBLISH TO STORE</button>
+        <button onclick="saveProduct()" class="verify-btn">PUBLISH TO STORE</button>
     </div>
 
     <script>
+        // تصویر کا پری ویو دکھانے کا فنکشن
         function showPrev(url) {
             const img = document.getElementById('prevImg');
             const txt = document.getElementById('prevText');
-            if(url) { img.src = url; img.style.display='block'; txt.style.display='none'; }
-            else { img.style.display='none'; txt.style.display='block'; }
+            const box = document.getElementById('previewBox');
+
+            if(url && url.length > 5) { 
+                img.src = url; 
+                img.style.display = 'block'; 
+                txt.style.display = 'none'; 
+                box.style.borderStyle = 'solid';
+            }
+            else { 
+                img.style.display = 'none'; 
+                txt.style.display = 'block'; 
+                box.style.borderStyle = 'dashed';
+            }
         }
+
+        // ڈیٹا محفوظ کرنے کا فنکشن
         async function saveProduct() {
+            const btn = document.querySelector('.verify-btn');
             const data = {
                 title: document.getElementById('title').value,
                 description: document.getElementById('desc').value,
@@ -44,13 +136,33 @@
                 imageUrl: document.getElementById('imgUrl').value,
                 category: document.getElementById('cat').value
             };
-            if(!data.title || !data.price || !data.imageUrl) return alert("Please fill all fields!");
-            await fetch('/api/add-product', {
-                method: 'POST',
-                headers: {'Content-Type':'application/json'},
-                body: JSON.stringify(data)
-            });
-            window.location.href = '/talha/products';
+
+            if(!data.title || !data.price || !data.imageUrl) {
+                return alert("VIP Warning: Title, Price, and Image URL are required!");
+            }
+
+            btn.innerText = "UPLOADING TO VAULT...";
+            btn.disabled = true;
+
+            try {
+                const res = await fetch('/api/add-product', {
+                    method: 'POST',
+                    headers: {'Content-Type':'application/json'},
+                    body: JSON.stringify(data)
+                });
+
+                if(res.ok) {
+                    window.location.href = '/talha/products';
+                } else {
+                    alert("Error saving product!");
+                    btn.innerText = "PUBLISH TO STORE";
+                    btn.disabled = false;
+                }
+            } catch (error) {
+                alert("Connection lost!");
+                btn.innerText = "PUBLISH TO STORE";
+                btn.disabled = false;
+            }
         }
     </script>
 </body>
