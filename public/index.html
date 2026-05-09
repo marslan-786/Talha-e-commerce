@@ -9,72 +9,64 @@
 
     <!-- Search Overlay -->
     <div id="searchOverlay" class="search-overlay">
-        <div class="search-container">
-            <input type="text" id="searchInput" placeholder="Search products..." oninput="handleSearchInput()">
-            <div id="searchActionIcon" onclick="clearOrCloseSearch()">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-            </div>
+        <input type="text" id="searchInput" placeholder="Search Caliber Products..." style="flex:1; border:none; outline:none; font-size:1.2rem; font-weight:600;" oninput="doSearch()">
+        <div onclick="closeSearch()" style="cursor:pointer; padding:10px;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </div>
     </div>
 
-    <!-- VIP Sidebar Menu -->
+    <!-- VIP Sidebar -->
     <div id="sidebar" class="sidebar">
         <div class="sidebar-header">
-            <h2 class="vip-text">MENU</h2>
+            <span class="brand-title">MENU</span>
             <div onclick="toggleMenu()" style="cursor:pointer;">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
             </div>
         </div>
-        
-        <div class="menu-item" onclick="toggleCategories()">
-            <span>CATEGORIES</span>
-            <svg id="catArrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transition:0.3s;"><polyline points="6 9 12 15 18 9"></polyline></svg>
-        </div>
-        <div id="categoryDropdown" class="dropdown-content"></div>
-        
-        <div class="menu-item">PRIVACY POLICY</div>
-        <div class="menu-item">HELP & SUPPORT</div>
+        <div class="menu-item"><div class="menu-icon-box">🏠</div> HOME</div>
+        <div class="menu-item" onclick="toggleFilter()"><div class="menu-icon-box">⏳</div> SORT BY</div>
+        <div class="menu-item"><div class="menu-icon-box">📜</div> PRIVACY POLICY</div>
+        <div class="menu-item"><div class="menu-icon-box">💬</div> HELP CENTER</div>
     </div>
 
     <!-- Header -->
     <div class="header">
         <div onclick="toggleMenu()" style="cursor:pointer;">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2.5"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
         </div>
         <div class="brand-wrapper">
             <span class="brand-title vip-animated-title">CALIBER</span>
             <svg class="seven-svg" width="30" height="40" viewBox="0 0 100 120"><path d="M20 20 L80 20 L40 100" /></svg>
         </div>
-        <div style="display:flex; gap:15px; align-items:center;">
+        <div style="display:flex; gap:15px;">
             <div onclick="openSearch()" style="cursor:pointer;">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
             </div>
             <div class="cart-btn" onclick="window.location.href='/cart'">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2.5"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
                 <span id="cartCount" class="cart-badge">0</span>
             </div>
         </div>
     </div>
 
-    <!-- Filter Bar -->
-    <div class="filter-bar">
-        <h3 style="font-size: 0.8rem; color:#999; letter-spacing:1px;">COLLECTION</h3>
-        <select id="priceFilter" onchange="applyFilter()" class="vip-select">
-            <option value="latest">LATEST</option>
-            <option value="low">PRICE: LOW TO HIGH</option>
-            <option value="high">PRICE: HIGH TO LOW</option>
-        </select>
+    <!-- Main Content -->
+    <div id="homeSections"></div>
+
+    <!-- Filter Modal -->
+    <div id="filterOverlay" class="filter-overlay">
+        <div class="filter-card">
+            <h2 style="margin-bottom:25px;">SORT PRODUCTS</h2>
+            <div class="filter-opt" onclick="applySort('low')">Price: Low to High</div>
+            <div class="filter-opt" onclick="applySort('high')">Price: High to Low</div>
+            <div class="filter-opt" onclick="applySort('latest')">Latest Items</div>
+            <p onclick="toggleFilter()" style="margin-top:20px; cursor:pointer; color:#999; font-weight:700;">CANCEL</p>
+        </div>
     </div>
 
-    <!-- Main Grid -->
-    <div id="productGrid" class="product-grid"></div>
-
-    <!-- Toast Message -->
-    <div id="toast" class="toast">Added to Cart Successfully! ✅</div>
+    <div id="toast" class="toast">Added to Cart! ✅</div>
 
     <footer class="vip-footer">
-        <div class="footer-links"><span>Help</span> <span>Privacy</span> <span>Policy</span></div>
-        <p class="copy-text">© 2026 CALIBER 7. ALL RIGHTS RESERVED.</p>
+        <p class="copy-text">© 2026 CALIBER 7 LUXURY. ALL RIGHTS RESERVED.</p>
     </footer>
 
     <script>
@@ -83,90 +75,73 @@
         async function loadData() {
             const res = await fetch('/api/get-products');
             allProducts = await res.json();
-            
-            // Categories for dropdown
-            const cats = [...new Set(allProducts.map(p => p.category))];
-            document.getElementById('categoryDropdown').innerHTML = cats.map(c => 
-                `<div class="dropdown-item" onclick="filterByCategory('${c}')">${c.toUpperCase()}</div>`
-            ).join('');
-
-            renderProducts(allProducts);
+            renderHome(allProducts);
         }
 
-        function renderProducts(data) {
-            const grid = document.getElementById('productGrid');
-            if(data.length === 0) {
-                grid.innerHTML = `<p style="grid-column: 1/-1; text-align:center; padding:50px; color:#999;">No products found.</p>`;
-                return;
-            }
-            grid.innerHTML = data.map(p => `
-                <div class="product-card" onclick="window.location.href='/product/${p._id}'">
-                    <div class="img-container"><img src="${p.imageUrl}" class="product-img"></div>
-                    <div class="product-info">
-                        <div class="p-title">${p.title}</div>
-                        <p class="p-desc-short">${p.description}</p>
-                        <div class="p-price">Rs. ${p.price}</div>
-                        <div class="action-area" onclick="event.stopPropagation()">
-                            <button class="btn-edit" style="background:#000; color:#fff;" onclick="addToCart('${p._id}')">ADD TO CART</button>
-                            <button class="btn-delete" style="background:#0070f3; color:#fff;" onclick="window.location.href='/buy/${p._id}'">BUY NOW</button>
+        function renderHome(data) {
+            const container = document.getElementById('homeSections');
+            container.innerHTML = "";
+            const categories = [...new Set(data.map(p => p.category))];
+
+            categories.forEach(cat => {
+                const catProducts = data.filter(p => p.category === cat).slice(0, 4);
+                const section = `
+                    <div class="category-section">
+                        <div class="category-header">
+                            <h2>${cat.toUpperCase()}</h2>
+                            <a href="#" class="view-all">View All →</a>
+                        </div>
+                        <div class="product-grid">
+                            ${catProducts.map(p => `
+                                <div class="product-card" onclick="window.location.href='/product/${p._id}'">
+                                    <div class="img-container"><img src="${p.imageUrl}" class="product-img"></div>
+                                    <div class="product-info">
+                                        <div class="p-title">${p.title}</div>
+                                        <div class="p-price">Rs. ${p.price}</div>
+                                        <div class="action-area" onclick="event.stopPropagation()">
+                                            <button class="btn-cart" onclick="addToCart('${p._id}')">ADD TO CART</button>
+                                            <button class="btn-buy">BUY</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
                         </div>
                     </div>
-                </div>
-            `).join('');
+                `;
+                container.innerHTML += section;
+            });
         }
 
-        // --- Search Logic ---
-        function openSearch() { document.getElementById('searchOverlay').classList.add('active'); document.getElementById('searchInput').focus(); }
-        function clearOrCloseSearch() {
-            const input = document.getElementById('searchInput');
-            if(input.value !== "") { input.value = ""; renderProducts(allProducts); }
-            else { document.getElementById('searchOverlay').classList.remove('active'); }
-        }
-        function handleSearchInput() {
-            const query = document.getElementById('searchInput').value.toLowerCase();
-            const filtered = allProducts.filter(p => p.title.toLowerCase().includes(query) || p.category.toLowerCase().includes(query));
-            renderProducts(filtered);
-        }
-
-        // --- Sidebar & Category Logic ---
         function toggleMenu() { document.getElementById('sidebar').classList.toggle('active'); }
-        function toggleCategories() {
-            const drop = document.getElementById('categoryDropdown');
-            const arrow = document.getElementById('catArrow');
-            drop.classList.toggle('active');
-            arrow.style.transform = drop.classList.contains('active') ? 'rotate(180deg)' : 'rotate(0deg)';
-        }
-        function filterByCategory(cat) {
-            const filtered = allProducts.filter(p => p.category === cat);
-            renderProducts(filtered);
-            toggleMenu();
+        function toggleFilter() { document.getElementById('filterOverlay').classList.toggle('active'); }
+        function openSearch() { document.getElementById('searchOverlay').classList.add('active'); document.getElementById('searchInput').focus(); }
+        function closeSearch() { document.getElementById('searchOverlay').classList.remove('active'); renderHome(allProducts); }
+        
+        function doSearch() {
+            const q = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = allProducts.filter(p => p.title.toLowerCase().includes(q));
+            renderHome(filtered);
         }
 
-        // --- Filter Logic ---
-        function applyFilter() {
-            const val = document.getElementById('priceFilter').value;
+        function applySort(type) {
             let sorted = [...allProducts];
-            if(val === 'low') sorted.sort((a,b) => a.price - b.price);
-            else if(val === 'high') sorted.sort((a,b) => b.price - a.price);
-            renderProducts(sorted);
+            if(type === 'low') sorted.sort((a,b) => a.price - b.price);
+            if(type === 'high') sorted.sort((a,b) => b.price - a.price);
+            renderHome(sorted);
+            toggleFilter();
         }
 
-        // --- Toast & Cart ---
         function addToCart(id) {
             let cart = JSON.parse(localStorage.getItem('cart') || '[]');
             cart.push(id);
             localStorage.setItem('cart', JSON.stringify(cart));
             document.getElementById('cartCount').innerText = cart.length;
-            
-            const toast = document.getElementById('toast');
-            toast.classList.add('active');
-            setTimeout(() => toast.classList.remove('active'), 3000);
+            const t = document.getElementById('toast');
+            t.classList.add('active');
+            setTimeout(() => t.classList.remove('active'), 3000);
         }
 
-        window.onload = () => {
-            loadData();
-            document.getElementById('cartCount').innerText = JSON.parse(localStorage.getItem('cart') || '[]').length;
-        };
+        window.onload = loadData;
     </script>
 </body>
 </html>
