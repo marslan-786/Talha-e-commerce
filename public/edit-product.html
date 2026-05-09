@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Edit Product | Caliber 7 Admin</title>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background-color: #ffffff; color: #1a1a1a; overflow-x: hidden; }
+
+        /* --- VIP Header --- */
+        .header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 20px; position: sticky; top: 0; background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px); z-index: 1000; border-bottom: 1px solid #f2f2f2;
+        }
+        .brand-wrapper { display: flex; align-items: center; gap: 8px; }
+        .brand-title { 
+            font-size: 1.4rem; font-weight: 800; letter-spacing: 1px;
+            background: linear-gradient(270deg, #ff0055, #0070f3, #000, #ff0055);
+            background-size: 300% 300%; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            animation: color-shift 4s ease infinite;
+        }
+        @keyframes color-shift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        .sub-brand { font-size: 0.55rem; color: #999; display: block; letter-spacing: 1px; margin-top: -4px; font-weight: 700; }
+
+        /* --- Animated 7 --- */
+        .seven-svg path {
+            stroke: #000; fill: none; stroke-width: 10; stroke-linecap: round;
+            animation: drawColor 3s infinite alternate ease-in-out;
+        }
+        @keyframes drawColor { 0% { stroke: #ff0055; stroke-dasharray: 100; stroke-dashoffset: 100; } 100% { stroke: #0070f3; stroke-dashoffset: 0; } }
+
+        /* --- Form Design --- */
+        .form-container { padding: 20px; max-width: 600px; margin: 0 auto; }
+        .preview-box {
+            width: 100%; aspect-ratio: 16/9; border: 2px solid #f0f0f0; border-radius: 20px;
+            margin-bottom: 25px; display: flex; align-items: center; justify-content: center;
+            overflow: hidden; background: #fafafa;
+        }
+        .vip-input {
+            width: 100%; padding: 15px 20px; border-radius: 15px; border: 1.5px solid #f0f0f0;
+            margin-bottom: 15px; outline: none; font-size: 0.95rem; background: #fafafa; transition: 0.3s;
+            font-weight: 600;
+        }
+        .vip-input:focus { border-color: #000; background: #fff; box-shadow: 0 8px 25px rgba(0,0,0,0.05); }
+
+        .update-btn {
+            width: 100%; background: #000; color: #fff; border: none; padding: 16px;
+            border-radius: 50px; font-weight: 800; cursor: pointer; transition: 0.3s;
+            letter-spacing: 1px; text-transform: uppercase; margin-top: 10px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .update-btn:hover { background: #222; transform: translateY(-2px); }
+        .update-btn:active { transform: scale(0.98); }
+        .back-link { font-size: 1.5rem; color: #000; text-decoration: none; padding: 5px; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <a href="/talha/products" class="back-link">←</a>
+        <div class="brand-wrapper">
+            <div>
+                <span class="brand-title">CALIBER</span>
+                <span class="sub-brand">EDIT PRODUCT</span>
+            </div>
+            <svg class="seven-svg" width="35" height="45" viewBox="0 0 100 120">
+                <path d="M20 20 L80 20 L40 100" />
+            </svg>
+        </div>
+    </div>
+
+    <div class="form-container">
+        <!-- Live Image Preview -->
+        <div id="previewBox" class="preview-box">
+            <img id="prevImg" style="width:100%; height:100%; object-fit: contain;">
+        </div>
+
+        <input type="text" id="imgUrl" class="vip-input" placeholder="Image URL" oninput="updatePrev(this.value)">
+        <input type="text" id="title" class="vip-input" placeholder="Product Title">
+        <textarea id="desc" class="vip-input" style="height: 120px; padding-top: 15px; resize: none;" placeholder="Description"></textarea>
+        
+        <div style="display: flex; gap: 10px;">
+            <input type="number" id="price" class="vip-input" placeholder="Price (PKR)">
+            <input type="text" id="cat" class="vip-input" placeholder="Category">
+        </div>
+
+        <button onclick="updateProduct()" class="update-btn">SAVE CHANGES</button>
+    </div>
+
+    <script>
+        let productId = "";
+
+        // 1. پیج لوڈ ہوتے ہی پرانا ڈیٹا لانا
+        async function fetchExistingData() {
+            const pathParts = window.location.pathname.split('/');
+            productId = pathParts[pathParts.length - 1]; // URL سے ID نکالنا
+
+            try {
+                const res = await fetch('/api/product/' + productId);
+                const p = await res.json();
+
+                if(p) {
+                    document.getElementById('imgUrl').value = p.imageUrl;
+                    document.getElementById('title').value = p.title;
+                    document.getElementById('desc').value = p.description;
+                    document.getElementById('price').value = p.price;
+                    document.getElementById('cat').value = p.category;
+                    document.getElementById('prevImg').src = p.imageUrl;
+                }
+            } catch (error) {
+                alert("Error loading product data!");
+            }
+        }
+
+        function updatePrev(url) {
+            document.getElementById('prevImg').src = url;
+        }
+
+        // 2. ڈیٹا اپڈیٹ کرنے کا فنکشن
+        async function updateProduct() {
+            const btn = document.querySelector('.update-btn');
+            const data = {
+                title: document.getElementById('title').value,
+                description: document.getElementById('desc').value,
+                price: document.getElementById('price').value,
+                imageUrl: document.getElementById('imgUrl').value,
+                category: document.getElementById('cat').value
+            };
+
+            btn.innerText = "UPDATING VAULT...";
+            btn.disabled = true;
+
+            try {
+                const res = await fetch('/api/update-product/' + productId, {
+                    method: 'PUT',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(data)
+                });
+
+                if(res.ok) {
+                    alert("VIP Update Successful! ✅");
+                    window.location.href = '/talha/products';
+                } else {
+                    alert("Update failed!");
+                    btn.innerText = "SAVE CHANGES";
+                    btn.disabled = false;
+                }
+            } catch (error) {
+                alert("Network error!");
+                btn.innerText = "SAVE CHANGES";
+                btn.disabled = false;
+            }
+        }
+
+        window.onload = fetchExistingData;
+    </script>
+</body>
+</html>
