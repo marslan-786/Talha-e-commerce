@@ -23,14 +23,14 @@
         }
         @keyframes color-shift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
-        /* SVG Seven Animation (Clean) */
+        /* SVG Seven Animation */
         .seven-svg path {
             stroke: #000; fill: none; stroke-width: 10; stroke-linecap: round;
             animation: drawColor 3s infinite alternate ease-in-out;
         }
         @keyframes drawColor { 0% { stroke: #ff0055; stroke-dasharray: 100; stroke-dashoffset: 100; } 100% { stroke: #0070f3; stroke-dashoffset: 0; } }
 
-        /* Sidebar Styling (Sample Based) */
+        /* Sidebar Styling */
         #sidebar { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .sidebar-item { transition: all 0.2s; border-radius: 0.75rem; color: #94a3b8; }
         .sidebar-item:hover { background-color: rgba(255,255,255,0.05); color: #ffffff; }
@@ -66,12 +66,10 @@
     <!-- Sidebar Overlay -->
     <div id="sidebarOverlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/60 z-[1000] hidden backdrop-blur-sm"></div>
 
-    <!-- VIP Sidebar (Trust SMS Style) -->
+    <!-- VIP Sidebar -->
     <aside id="sidebar" class="fixed inset-y-0 left-0 w-72 bg-[#020203] text-white flex flex-col h-full z-[1001] -translate-x-full border-r border-gray-900 shadow-2xl">
         <div class="p-6 border-b border-gray-900 flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <span class="premium-logo-text text-xl font-black">CALIBER 7</span>
-            </div>
+            <span class="premium-logo-text text-xl font-black">CALIBER 7</span>
             <button onclick="toggleSidebar()" class="text-gray-500 hover:text-white"><i class="fa-solid fa-xmark text-2xl"></i></button>
         </div>
 
@@ -87,36 +85,23 @@
                     <i class="fa-solid fa-chevron-down text-xs"></i>
                 </button>
                 <div id="catMenu" class="dropdown-menu pl-10 space-y-2 py-2">
-                    <!-- Categories will load here -->
                     <div id="categoryLinks"></div>
                 </div>
             </div>
 
-            <a href="#" class="flex items-center gap-3 p-3 sidebar-item">
-                <i class="fa-solid fa-shield-halved"></i> <span>Privacy Policy</span>
-            </a>
-            <a href="#" class="flex items-center gap-3 p-3 sidebar-item">
-                <i class="fa-solid fa-circle-question"></i> <span>Help Center</span>
-            </a>
+            <a href="#" class="flex items-center gap-3 p-3 sidebar-item"><i class="fa-solid fa-shield-halved"></i> <span>Privacy Policy</span></a>
+            <a href="#" class="flex items-center gap-3 p-3 sidebar-item"><i class="fa-solid fa-circle-question"></i> <span>Help Center</span></a>
         </nav>
-
-        <div class="p-4 border-t border-gray-900 text-center">
-            <p class="text-[10px] text-gray-600 tracking-widest uppercase">Elite Management</p>
-        </div>
     </aside>
 
-    <!-- Main Header -->
+    <!-- Header -->
     <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-100 px-4 py-4 md:px-8 flex items-center justify-between">
-        <div class="w-1/4">
-            <button onclick="toggleSidebar()" class="text-gray-800 p-2"><i class="fa-solid fa-bars-staggered text-2xl"></i></button>
-        </div>
-
-        <div class="flex-1 text-center flex items-center justify-center gap-2">
+        <button onclick="toggleSidebar()" class="text-gray-800 p-2"><i class="fa-solid fa-bars-staggered text-2xl"></i></button>
+        <div class="flex items-center justify-center gap-2 cursor-pointer" onclick="window.location.href='/'">
             <h1 class="premium-logo-text text-2xl md:text-3xl font-black tracking-tighter">CALIBER</h1>
             <svg class="seven-svg" width="30" height="40" viewBox="0 0 100 120"><path d="M20 20 L80 20 L40 100" /></svg>
         </div>
-
-        <div class="w-1/4 flex items-center justify-end gap-5">
+        <div class="flex items-center gap-5">
             <button onclick="toggleSearch()"><i class="fa-solid fa-magnifying-glass text-xl"></i></button>
             <div class="relative cursor-pointer" onclick="window.location.href='/cart'">
                 <i class="fa-solid fa-cart-shopping text-xl"></i>
@@ -125,32 +110,25 @@
         </div>
     </header>
 
-    <!-- Main Dashboard Body -->
+    <!-- Main Content -->
     <main class="flex-1 p-4 md:p-8 space-y-12">
-        <!-- Category-wise Products -->
         <div id="homeContent" class="space-y-16">
-            <!-- Skeletons while loading -->
-            <div class="animate-pulse flex space-x-4">Loading Caliber Store...</div>
+            <div class="animate-pulse text-gray-400 font-bold">SYCHRONIZING CALIBER INVENTORY...</div>
         </div>
     </main>
 
-    <!-- Footer (Privacy & Copyright) -->
     <footer class="bg-gray-50 border-t border-gray-100 py-12 px-6 text-center">
         <div class="flex justify-center gap-8 mb-6 text-sm font-semibold text-gray-500 uppercase tracking-widest">
-            <a href="#" class="hover:text-black">Privacy</a>
-            <a href="#" class="hover:text-black">Terms</a>
-            <a href="#" class="hover:text-black">Help</a>
+            <a href="#" class="hover:text-black">Privacy</a><a href="#" class="hover:text-black">Terms</a><a href="#" class="hover:text-black">Help</a>
         </div>
-        <div class="flex flex-col items-center gap-2">
-            <span class="premium-logo-text font-black text-xl tracking-widest">CALIBER 7</span>
-            <p class="text-xs text-gray-400 font-bold">© 2026 ALL RIGHTS RESERVED. REGISTERED TRADEMARK.</p>
-        </div>
+        <span class="premium-logo-text font-black text-xl tracking-widest">CALIBER 7</span>
+        <p class="text-xs text-gray-400 font-bold mt-2">© 2026 ALL RIGHTS RESERVED.</p>
     </footer>
 
-    <!-- Toast Notification -->
+    <!-- Toast -->
     <div id="toast" class="toast bg-black text-white px-8 py-4 rounded-full shadow-2xl font-bold flex items-center gap-3">
         <i class="fa-solid fa-circle-check text-green-400"></i>
-        <span>Added to cart successfully!</span>
+        <span>Selection added to Cart!</span>
     </div>
 
     <script>
@@ -159,14 +137,12 @@
         async function loadDashboard() {
             const res = await fetch('/api/get-products');
             allProducts = await res.json();
-            
-            // Render Grouped Sections
             renderGroupedHome();
             
-            // Load Categories in Sidebar
+            // Sidebar Category Links (Click will now Redirect)
             const cats = [...new Set(allProducts.map(p => p.category))];
             document.getElementById('categoryLinks').innerHTML = cats.map(c => `
-                <button onclick="filterByCat('${c}')" class="block w-full text-left p-2 text-sm text-gray-500 hover:text-white">• ${c}</button>
+                <button onclick="window.location.href='/category/${encodeURIComponent(c)}'" class="block w-full text-left p-2 text-sm text-gray-500 hover:text-white">• ${c}</button>
             `).join('');
         }
 
@@ -174,33 +150,29 @@
             const data = filteredData || allProducts;
             const container = document.getElementById('homeContent');
             container.innerHTML = "";
-
             const categories = [...new Set(data.map(p => p.category))];
 
             categories.forEach(cat => {
                 const catProducts = data.filter(p => p.category === cat).slice(0, 4);
-                
                 const section = `
                     <section>
                         <div class="flex justify-between items-end mb-6 px-2">
                             <h2 class="text-2xl font-extrabold tracking-tight border-l-4 border-black pl-4 uppercase">${cat}</h2>
-                            <a href="#" class="text-blue-600 font-bold text-sm hover:underline">VIEW ALL <i class="fa-solid fa-arrow-right ml-1"></i></a>
+                            <a href="/category/${encodeURIComponent(cat)}" class="text-blue-600 font-bold text-sm hover:underline">VIEW ALL <i class="fa-solid fa-arrow-right ml-1"></i></a>
                         </div>
                         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
                             ${catProducts.map(p => `
                                 <div class="product-card p-2 md:p-3" onclick="window.location.href='/product/${p._id}'">
                                     <div class="aspect-square rounded-2xl overflow-hidden mb-4 bg-gray-50">
-                                        <img src="${p.imageUrl}" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
+                                        <img src="${p.imageUrl}" class="w-full h-full object-cover">
                                     </div>
                                     <div class="px-2 pb-2">
-                                        <h3 class="font-bold text-sm md:text-base mb-1 truncate">${p.title}</h3>
+                                        <h3 class="font-bold text-sm truncate uppercase">${p.title}</h3>
                                         <p class="text-[10px] text-gray-400 mb-3 line-clamp-2 leading-tight">${p.description}</p>
-                                        <div class="flex items-center justify-between mb-3">
-                                            <span class="font-black text-blue-600 text-sm md:text-lg">Rs. ${p.price}</span>
-                                        </div>
-                                        <div class="grid grid-cols-2 gap-2" onclick="event.stopPropagation()">
-                                            <button onclick="addToCart('${p._id}')" class="bg-black text-white text-[10px] font-bold py-2 rounded-lg hover:bg-gray-800">CART</button>
-                                            <button class="bg-blue-600 text-white text-[10px] font-bold py-2 rounded-lg hover:bg-blue-700">BUY</button>
+                                        <span class="font-black text-black text-lg">Rs. ${p.price}</span>
+                                        <div class="grid grid-cols-2 gap-2 mt-4" onclick="event.stopPropagation()">
+                                            <button onclick="addToCart('${p._id}')" class="bg-black text-white text-[10px] font-bold py-2 rounded-lg">CART</button>
+                                            <button onclick="window.location.href='/buy/${p._id}'" class="bg-blue-600 text-white text-[10px] font-bold py-2 rounded-lg">BUY</button>
                                         </div>
                                     </div>
                                 </div>
@@ -212,51 +184,31 @@
             });
         }
 
-        // Search Logic
-        function toggleSearch() {
-            const overlay = document.getElementById('searchOverlay');
-            overlay.classList.toggle('-top-full');
-            overlay.classList.toggle('top-0');
-            if(overlay.classList.contains('top-0')) document.getElementById('searchInput').focus();
-        }
-
-        function handleSearch() {
-            const query = document.getElementById('searchInput').value.toLowerCase();
-            const btn = document.getElementById('searchCloseBtn');
-            
-            // Logic: Clear text if typing, close bar if empty
-            btn.onclick = query.length > 0 ? () => { document.getElementById('searchInput').value = ""; handleSearch(); } : toggleSearch;
-            
-            const filtered = allProducts.filter(p => p.title.toLowerCase().includes(query) || p.category.toLowerCase().includes(query));
-            renderGroupedHome(filtered);
-        }
-
-        // Sidebar & UI Helpers
+        // Logic Helpers
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('-translate-x-full');
             document.getElementById('sidebarOverlay').classList.toggle('hidden');
         }
-
         function toggleDropdown(id) {
             document.getElementById(id).classList.toggle('active');
             event.currentTarget.querySelector('.fa-chevron-down').classList.toggle('rotate-180');
         }
-
-        function filterByCat(cat) {
-            const filtered = allProducts.filter(p => p.category === cat);
-            renderGroupedHome(filtered);
-            toggleSidebar();
+        function toggleSearch() {
+            const s = document.getElementById('searchOverlay');
+            s.classList.toggle('-top-full'); s.classList.toggle('top-0');
+            if(s.classList.contains('top-0')) document.getElementById('searchInput').focus();
         }
-
+        function handleSearch() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = allProducts.filter(p => p.title.toLowerCase().includes(query) || p.category.toLowerCase().includes(query));
+            renderGroupedHome(filtered);
+        }
         function addToCart(id) {
             let cart = JSON.parse(localStorage.getItem('cart') || '[]');
-            cart.push(id);
-            localStorage.setItem('cart', JSON.stringify(cart));
+            cart.push(id); localStorage.setItem('cart', JSON.stringify(cart));
             document.getElementById('cartCount').innerText = cart.length;
-            
-            const toast = document.getElementById('toast');
-            toast.classList.add('active');
-            setTimeout(() => toast.classList.remove('active'), 3000);
+            const t = document.getElementById('toast');
+            t.classList.add('active'); setTimeout(() => t.classList.remove('active'), 3000);
         }
 
         window.onload = () => {
