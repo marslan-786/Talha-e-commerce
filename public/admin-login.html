@@ -3,31 +3,196 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <link rel="stylesheet" href="/style.css">
+    <title>Caliber 7 - Admin Access</title>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap');
+
+        /* --- Reset & Base --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { 
+            background-color: #ffffff; 
+            color: #1a1a1a; 
+            height: 100vh; 
+            display: flex; 
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* --- Header --- */
+        .header {
+            display: flex; 
+            justify-content: center; 
+            align-items: center;
+            padding: 25px 20px; 
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px); 
+            border-bottom: 1px solid #f2f2f2;
+        }
+
+        .brand-wrapper { 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+        }
+
+        /* --- VIP Animated Title --- */
+        .brand-title { 
+            font-size: 1.6rem; 
+            font-weight: 800; 
+            letter-spacing: 2px; 
+            background: linear-gradient(270deg, #ff0055, #0070f3, #000, #ff0055);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: color-shift 4s ease infinite;
+        }
+
+        @keyframes color-shift { 
+            0% { background-position: 0% 50%; } 
+            50% { background-position: 100% 50%; } 
+            100% { background-position: 0% 50%; } 
+        }
+
+        .sub-brand { 
+            font-size: 0.6rem; 
+            color: #999; 
+            display: block; 
+            letter-spacing: 2px; 
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-top: -2px;
+        }
+
+        /* --- Animated SVG 7 --- */
+        .seven-svg path {
+            stroke: #000; 
+            fill: none; 
+            stroke-width: 10; 
+            stroke-linecap: round;
+            animation: drawColor 3s infinite alternate ease-in-out;
+        }
+
+        @keyframes drawColor { 
+            0% { stroke: #ff0055; stroke-dasharray: 100; stroke-dashoffset: 100; } 
+            100% { stroke: #0070f3; stroke-dashoffset: 0; } 
+        }
+
+        /* --- Login Box --- */
+        .login-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .vip-input {
+            width: 100%;
+            max-width: 350px;
+            padding: 16px 25px;
+            border-radius: 50px;
+            border: 1.5px solid #eee;
+            background: #fafafa;
+            outline: none;
+            text-align: center;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-bottom: 25px;
+        }
+
+        .vip-input:focus {
+            border-color: #000;
+            background: #fff;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            transform: translateY(-2px);
+        }
+
+        .verify-btn {
+            width: 100%;
+            max-width: 350px;
+            background: #000;
+            color: #fff;
+            border: none;
+            padding: 16px;
+            border-radius: 50px;
+            font-weight: 800;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .verify-btn:hover {
+            background: #222;
+            transform: scale(1.02);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+
+        .verify-btn:active {
+            transform: scale(0.98);
+        }
+    </style>
 </head>
 <body>
-    <div class="header" style="justify-content: center;">
+
+    <div class="header">
         <div class="brand-wrapper">
-            <div><span class="brand-title">CALIBER</span><span class="sub-brand">LUXURY ADMIN</span></div>
-            <svg class="seven-svg" width="35" height="45" viewBox="0 0 100 120"><path d="M20 20 L80 20 L40 100" /></svg>
+            <div>
+                <span class="brand-title">CALIBER</span>
+                <span class="sub-brand">LUXURY ADMIN</span>
+            </div>
+            <svg class="seven-svg" width="35" height="45" viewBox="0 0 100 120">
+                <path d="M20 20 L80 20 L40 100" />
+            </svg>
         </div>
     </div>
 
-    <div style="padding: 50px 20px; display: flex; flex-direction: column; align-items: center;">
-        <input type="password" id="keyInput" class="vip-input" style="max-width: 350px; text-align: center; border-radius: 50px;" placeholder="Enter Access Key">
-        <button onclick="login()" class="verify-btn" style="max-width: 350px;">VERIFY ACCESS</button>
+    <div class="login-container">
+        <input type="password" id="keyInput" class="vip-input" placeholder="Enter Access Key">
+        <button onclick="login()" class="verify-btn">VERIFY ACCESS</button>
     </div>
 
     <script>
         async function login() {
-            const res = await fetch('/api/login', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({accessKey: document.getElementById('keyInput').value})
-            });
-            if (res.ok) window.location.href = '/talha/products';
-            else alert("Invalid Key!");
+            const btn = document.querySelector('.verify-btn');
+            const originalText = btn.innerText;
+            
+            // بٹن اینیمیشن
+            btn.innerText = "AUTHENTICATING...";
+            btn.disabled = true;
+
+            try {
+                const res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({accessKey: document.getElementById('keyInput').value})
+                });
+
+                if (res.ok) {
+                    window.location.href = '/talha/products';
+                } else {
+                    alert("Invalid Key! Access Denied.");
+                    btn.innerText = originalText;
+                    btn.disabled = false;
+                }
+            } catch (error) {
+                alert("Connection Error!");
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }
         }
+
+        // Enter Key پریس کرنے پر لاگ ان
+        document.getElementById('keyInput').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                login();
+            }
+        });
     </script>
 </body>
 </html>
