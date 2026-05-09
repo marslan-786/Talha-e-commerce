@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>My Cart | Caliber 7</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap');
+        body { background-color: #ffffff; color: #1a1a1a; font-family: 'Plus Jakarta Sans', sans-serif; }
+        .premium-logo-text { background: linear-gradient(270deg, #ff0055, #0070f3, #000, #ff0055); background-size: 300% 300%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: color-shift 4s ease infinite; }
+        @keyframes color-shift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        .seven-svg path { stroke: #000; fill: none; stroke-width: 10; stroke-linecap: round; animation: drawColor 3s infinite alternate ease-in-out; }
+        @keyframes drawColor { 0% { stroke: #ff0055; stroke-dasharray: 100; stroke-dashoffset: 100; } 100% { stroke: #0070f3; stroke-dashoffset: 0; } }
+        .vip-checkbox { width: 24px; height: 24px; border: 2.5px solid #eee; border-radius: 8px; appearance: none; cursor: pointer; transition: 0.3s; position: relative; }
+        .vip-checkbox:checked { background-color: #000; border-color: #000; }
+        .vip-checkbox:checked::after { content: '\f00c'; font-family: 'Font Awesome 6 Free'; font-weight: 900; color: white; font-size: 12px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+        .checkout-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(20px); border-top: 1px solid #f0f0f0; padding: 20px; z-index: 100; }
+    </style>
+</head>
+<body class="min-h-screen pb-32">
+    <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-100 p-5 flex justify-between items-center">
+        <button onclick="window.location.href='/'" class="text-gray-800 p-2"><i class="fa-solid fa-arrow-left-long text-xl"></i></button>
+        <div class="flex items-center gap-2"><h1 class="premium-logo-text text-2xl font-black">CALIBER 7</h1></div>
+        <button onclick="clearCart()" class="text-red-500 font-bold text-xs tracking-widest uppercase">Clear All</button>
+    </header>
+
+    <main class="max-w-4xl mx-auto p-4 md:p-8">
+        <div id="cartEmpty" class="hidden text-center py-32">
+            <i class="fa-solid fa-shopping-bag text-8xl text-gray-100 mb-6"></i>
+            <h2 class="text-2xl font-black text-gray-300 uppercase italic">Selection Empty</h2>
+            <button onclick="window.location.href='/'" class="mt-8 bg-black text-white px-8 py-3 rounded-xl font-bold">START SHOPPING</button>
+        </div>
+
+        <div id="cartList" class="space-y-4">
+            <div class="animate-pulse text-center py-20 font-bold text-gray-300">ESTABLISHING CONNECTION TO YOUR CART...</div>
+        </div>
+    </main>
+
+    <div id="bottomBar" class="checkout-bar hidden">
+        <div class="max-w-4xl mx-auto flex justify-between items-center">
+            <div>
+                <p id="selectedCount" class="text-[10px] font-bold text-blue-600 uppercase tracking-widest">0 ITEMS SELECTED</p>
+                <h3 id="totalBill" class="text-2xl font-black">Rs. 0</h3>
+            </div>
+            <button id="checkoutBtn" onclick="goToCheckout()" class="bg-black text-white px-10 py-4 rounded-2xl font-black tracking-widest hover:scale-105 transition-all shadow-2xl uppercase flex items-center gap-3">
+                SECURE CHECKOUT <i class="fa-solid fa-shield-check"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        async function loadCart() {
+            const cartIds = JSON.parse(localStorage.getItem('cart') || '[]');
+            if (cartIds.length === 0) {
+                document.getElementById('cartEmpty').classList.remove('hidden');
+                document.getElementById('bottomBar').classList.add('hidden');
+                document.getElementById('cartList').innerHTML = "";
+                return;
+            }
+
+            // Bulk Fetch API کال کریں
+            const res = await fetch('/api/products/bulk', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ ids: cartIds })
+            });
+            const products = await res.json();
+            
+            const list = document.getElementById('cartList');
+            list.innerHTML = products.map(p => `
+                <div class="flex items-center gap-5 p-4 bg-white rounded-3xl border border-gray-100 hover:shadow-md transition-all">
+                    <input type="checkbox" class="vip-checkbox item-select" data-id="${p._id}" data-price="${p.price}" onchange="updateTotal()" checked>
+                    <div class="w-24 h-24 rounded-2xl overflow-hidden bg-gray-50 flex-shrink-0">
+                        <img src="${p.imageUrl}" class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="font-bold text-sm md:text-lg uppercase truncate w-32 md:w-full">${p.title}</h4>
+                        <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-2">${p.category}</p>
+                        <span class="font-black text-black text-base md:text-xl">Rs. ${p.price}</span>
+                    </div>
+                    <button onclick="removeItem('${p._id}')" class="text-gray-300 hover:text-red-500 p-2"><i class="fa-solid fa-trash-can text-lg"></i></button>
+                </div>
+            `).join('');
+            
+            document.getElementById('bottomBar').classList.remove('hidden');
+            updateTotal();
+        }
+
+        function updateTotal() {
+            const selected = document.querySelectorAll('.item-select:checked');
+            let total = 0;
+            selected.forEach(cb => total += parseInt(cb.getAttribute('data-price')));
+            
+            document.getElementById('totalBill').innerText = `Rs. ${total.toLocaleString()}`;
+            document.getElementById('selectedCount').innerText = `${selected.length} ITEMS SELECTED`;
+            
+            const btn = document.getElementById('checkoutBtn');
+            btn.disabled = selected.length === 0;
+            btn.style.opacity = selected.length === 0 ? "0.5" : "1";
+        }
+
+        function removeItem(id) {
+            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            cart = cart.filter(item => item !== id);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            loadCart();
+        }
+
+        function clearCart() { if(confirm("Clear your selection?")) { localStorage.setItem('cart', '[]'); loadCart(); } }
+
+        function goToCheckout() {
+            const selected = Array.from(document.querySelectorAll('.item-select:checked')).map(cb => cb.getAttribute('data-id'));
+            if(selected.length > 0) window.location.href = `/buy/${selected.join(',')}`;
+        }
+
+        window.onload = loadCart;
+    </script>
+</body>
+</html>
