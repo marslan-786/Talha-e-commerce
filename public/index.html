@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caliber 7 Admin Access</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="login-container">
+        <!-- VIP Branding Area -->
+        <div class="brand-section">
+            <h1 class="main-title">CALIBER 
+                <span class="animated-seven">
+                    <svg width="60" height="80" viewBox="0 0 100 120">
+                        <path d="M20 20 L80 20 L40 100" stroke-width="12" fill="none" stroke-linecap="round" />
+                    </svg>
+                </span>
+            </h1>
+            <p class="sub-title">PREMIUM E-COMMERCE PLATFORM</p>
+        </div>
+
+        <!-- Open Style Login Form -->
+        <div class="login-form">
+            <input type="password" id="accessKey" placeholder="ENTER ACCESS KEY" />
+            <button onclick="attemptLogin()" id="loginBtn">VERIFY ACCESS</button>
+            <p id="errorMsg"></p>
+        </div>
+    </div>
+
+    <script>
+        async function attemptLogin() {
+            const key = document.getElementById('accessKey').value;
+            const btn = document.getElementById('loginBtn');
+            
+            const response = await fetch('/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ accessKey: key })
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                alert("Welcome, Admin!");
+                // یہاں سے ڈیش بورڈ پر بھیج دیں
+                window.location.href = "/admin-dashboard.html";
+            } else {
+                document.getElementById('errorMsg').innerText = result.message;
+                document.getElementById('accessKey').value = "";
+            }
+        }
+    </script>
+</body>
+</html>
