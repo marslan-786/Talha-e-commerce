@@ -44,10 +44,43 @@
         }
         .product-card:hover { transform: translateY(-8px); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
         
-        /* Search Overlay */
-        #searchOverlay { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        /* === NEW VIP ANIMATIONS === */
+        
+        /* Floating Animation for Live Feel */
+        .float-anim { animation: floating 4s ease-in-out infinite; }
+        @keyframes floating { 
+            0% { transform: translateY(0px); } 
+            50% { transform: translateY(-8px); } 
+            100% { transform: translateY(0px); } 
+        }
 
-        /* Toast Message */
+        /* Staggered Entrance Animation for reload */
+        .fade-in-up { animation: fadeInUp 0.8s cubic-bezier(0.25, 1, 0.5, 1) both; }
+        @keyframes fadeInUp { 
+            from { opacity: 0; transform: translateY(50px) scale(0.95); } 
+            to { opacity: 1; transform: translateY(0) scale(1); } 
+        }
+
+        /* Auto-Sizing Banner Styles with Glassmorphism Controls */
+        .carousel-container { position: relative; width: 100%; border-radius: 1.5rem; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15); }
+        .carousel-slide { display: none; width: 100%; animation: fadeSlide 0.6s ease-in-out; }
+        .carousel-slide.active { display: block; }
+        .carousel-slide img { width: 100%; height: auto; object-fit: contain; max-height: 70vh; display: block; }
+        
+        @keyframes fadeSlide { from { opacity: 0.4; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
+        
+        .glass-nav-btn {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.4); color: #fff;
+            width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 6px rgba(0,0,0,0.1); z-index: 10;
+        }
+        .glass-nav-btn:hover { background: rgba(255, 255, 255, 0.4); transform: translateY(-50%) scale(1.1); color: #000; }
+        .prev-btn { left: 15px; } .next-btn { right: 15px; }
+
+        /* Search Overlay & Toast */
+        #searchOverlay { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
         .toast { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55); z-index: 9999; }
         .toast.active { bottom: 2rem; }
     </style>
@@ -58,9 +91,7 @@
     <div id="searchOverlay" class="fixed -top-full left-0 w-full h-20 bg-white shadow-xl z-[100] flex items-center px-6 gap-4">
         <i class="fa-solid fa-magnifying-glass text-gray-400"></i>
         <input type="text" id="searchInput" oninput="handleSearch()" placeholder="Search luxury items..." class="flex-1 outline-none text-lg font-semibold">
-        <button onclick="toggleSearch()" id="searchCloseBtn" class="p-2">
-            <i class="fa-solid fa-xmark text-2xl text-gray-800"></i>
-        </button>
+        <button onclick="toggleSearch()" id="searchCloseBtn" class="p-2"><i class="fa-solid fa-xmark text-2xl text-gray-800"></i></button>
     </div>
 
     <!-- Sidebar Overlay -->
@@ -72,13 +103,8 @@
             <span class="premium-logo-text text-xl font-black">CALIBER 7</span>
             <button onclick="toggleSidebar()" class="text-gray-500 hover:text-white"><i class="fa-solid fa-xmark text-2xl"></i></button>
         </div>
-
         <nav class="flex-1 overflow-y-auto p-4 space-y-2">
-            <a href="/" class="flex items-center gap-3 p-3 sidebar-item bg-white/5 text-white">
-                <i class="fa-solid fa-house"></i> <span class="font-medium">Home Dashboard</span>
-            </a>
-
-            <!-- Categories Dropdown -->
+            <a href="/" class="flex items-center gap-3 p-3 sidebar-item bg-white/5 text-white"><i class="fa-solid fa-house"></i> <span class="font-medium">Home Dashboard</span></a>
             <div class="pt-2">
                 <button onclick="toggleDropdown('catMenu')" class="flex items-center justify-between w-full p-3 sidebar-item">
                     <div class="flex items-center gap-3"><i class="fa-solid fa-list"></i><span>Categories</span></div>
@@ -88,9 +114,7 @@
                     <div id="categoryLinks"></div>
                 </div>
             </div>
-
             <a href="#" class="flex items-center gap-3 p-3 sidebar-item"><i class="fa-solid fa-shield-halved"></i> <span>Privacy Policy</span></a>
-            <a href="#" class="flex items-center gap-3 p-3 sidebar-item"><i class="fa-solid fa-circle-question"></i> <span>Help Center</span></a>
         </nav>
     </aside>
 
@@ -111,35 +135,97 @@
     </header>
 
     <!-- Main Content -->
-    <main class="flex-1 p-4 md:p-8 space-y-12">
+    <main class="flex-1 p-4 md:p-8 space-y-8">
+        
+        <!-- Auto-Sizing Banner Section -->
+        <div id="bannerContainer" class="carousel-container bg-gray-100">
+            <!-- Banners will be injected here via JS -->
+        </div>
+
         <div id="homeContent" class="space-y-16">
-            <div class="animate-pulse text-gray-400 font-bold">SYCHRONIZING CALIBER INVENTORY...</div>
+            <div class="animate-pulse text-gray-400 font-bold text-center mt-10">SYCHRONIZING CALIBER INVENTORY...</div>
         </div>
     </main>
 
     <footer class="bg-gray-50 border-t border-gray-100 py-12 px-6 text-center">
-        <div class="flex justify-center gap-8 mb-6 text-sm font-semibold text-gray-500 uppercase tracking-widest">
-            <a href="#" class="hover:text-black">Privacy</a><a href="#" class="hover:text-black">Terms</a><a href="#" class="hover:text-black">Help</a>
-        </div>
         <span class="premium-logo-text font-black text-xl tracking-widest">CALIBER 7</span>
         <p class="text-xs text-gray-400 font-bold mt-2">© 2026 ALL RIGHTS RESERVED.</p>
     </footer>
 
     <!-- Toast -->
     <div id="toast" class="toast bg-black text-white px-8 py-4 rounded-full shadow-2xl font-bold flex items-center gap-3">
-        <i class="fa-solid fa-circle-check text-green-400"></i>
-        <span>Selection added to Cart!</span>
+        <i class="fa-solid fa-circle-check text-green-400"></i><span>Selection added to Cart!</span>
     </div>
 
     <script>
         let allProducts = [];
+        let currentSlide = 0;
+        let slideInterval;
+
+        // Dummy Banners (You will fetch these from DB later)
+        // Note: I put different dimensions here to show auto-sizing magic!
+        const bannersData = [
+            "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?q=80&w=2070&auto=format&fit=crop", // Wide image
+            "https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1000&auto=format&fit=crop", // Square/tall image
+            "https://media.giphy.com/media/xT0xezQGU5x3CEQaYY/giphy.gif" // GIF Example
+        ];
+
+        function initBanners() {
+            const container = document.getElementById('bannerContainer');
+            if(bannersData.length === 0) { container.style.display = 'none'; return; }
+
+            let slidesHtml = bannersData.map((src, i) => `
+                <div class="carousel-slide ${i === 0 ? 'active' : ''}">
+                    <img src="${src}" alt="Banner ${i+1}">
+                </div>
+            `).join('');
+
+            // Add Glassmorphism Navigation Buttons if more than 1 banner
+            if(bannersData.length > 1) {
+                slidesHtml += `
+                    <button class="glass-nav-btn prev-btn" onclick="changeSlide(-1)"><i class="fa-solid fa-chevron-left"></i></button>
+                    <button class="glass-nav-btn next-btn" onclick="changeSlide(1)"><i class="fa-solid fa-chevron-right"></i></button>
+                `;
+            }
+            
+            container.innerHTML = slidesHtml;
+            startSlideShow();
+        }
+
+        function changeSlide(direction) {
+            const slides = document.querySelectorAll('.carousel-slide');
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (currentSlide + direction + slides.length) % slides.length;
+            slides[currentSlide].classList.add('active');
+            
+            // Reset timer on manual click
+            clearInterval(slideInterval);
+            startSlideShow();
+        }
+
+        function startSlideShow() {
+            if(bannersData.length > 1) {
+                slideInterval = setInterval(() => changeSlide(1), 4000); // Auto slide every 4 seconds
+            }
+        }
+
+        // Dummy Products for testing the VIP animations
+        const dummyData = [
+            { _id: '1', title: 'Rolex Submariner', description: 'Luxury diving watch.', price: '45,00,000', category: 'Watches', imageUrl: 'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=500&auto=format&fit=crop' },
+            { _id: '2', title: 'Gucci Leather Bag', description: 'Premium Italian leather.', price: '3,50,000', category: 'Accessories', imageUrl: 'https://images.unsplash.com/photo-1584916201218-f4242ceb4809?w=500&auto=format&fit=crop' },
+            { _id: '3', title: 'Tom Ford Perfume', description: 'Oud Wood Eau De Parfum.', price: '85,000', category: 'Accessories', imageUrl: 'https://images.unsplash.com/photo-1594035910387-fea47794261f?w=500&auto=format&fit=crop' },
+            { _id: '4', title: 'Patek Philippe', description: 'Nautilus Rose Gold.', price: '1,20,00,000', category: 'Watches', imageUrl: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=500&auto=format&fit=crop' }
+        ];
 
         async function loadDashboard() {
-            const res = await fetch('/api/get-products');
-            allProducts = await res.json();
-            renderGroupedHome();
+            // Simulated Fetch Call
+            // const res = await fetch('/api/get-products');
+            // allProducts = await res.json();
             
-            // Sidebar Category Links (Click will now Redirect)
+            allProducts = dummyData; // Using dummy data to show you the result directly
+            renderGroupedHome();
+            initBanners(); // Initialize banners
+            
             const cats = [...new Set(allProducts.map(p => p.category))];
             document.getElementById('categoryLinks').innerHTML = cats.map(c => `
                 <button onclick="window.location.href='/category/${encodeURIComponent(c)}'" class="block w-full text-left p-2 text-sm text-gray-500 hover:text-white">• ${c}</button>
@@ -152,27 +238,29 @@
             container.innerHTML = "";
             const categories = [...new Set(data.map(p => p.category))];
 
-            categories.forEach(cat => {
+            categories.forEach((cat, catIndex) => {
                 const catProducts = data.filter(p => p.category === cat).slice(0, 4);
                 const section = `
                     <section>
-                        <div class="flex justify-between items-end mb-6 px-2">
+                        <div class="flex justify-between items-end mb-6 px-2 fade-in-up" style="animation-delay: ${catIndex * 0.1}s">
                             <h2 class="text-2xl font-extrabold tracking-tight border-l-4 border-black pl-4 uppercase">${cat}</h2>
                             <a href="/category/${encodeURIComponent(cat)}" class="text-blue-600 font-bold text-sm hover:underline">VIEW ALL <i class="fa-solid fa-arrow-right ml-1"></i></a>
                         </div>
                         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
-                            ${catProducts.map(p => `
-                                <div class="product-card p-2 md:p-3" onclick="window.location.href='/product/${p._id}'">
-                                    <div class="aspect-square rounded-2xl overflow-hidden mb-4 bg-gray-50">
-                                        <img src="${p.imageUrl}" class="w-full h-full object-cover">
+                            ${catProducts.map((p, pIndex) => `
+                                <!-- Added fade-in-up and animation-delay for staggered entry -->
+                                <div class="product-card p-2 md:p-3 fade-in-up" style="animation-delay: ${(pIndex * 0.15) + 0.2}s" onclick="window.location.href='/product/${p._id}'">
+                                    <div class="aspect-square rounded-2xl overflow-hidden mb-4 bg-gray-50 flex items-center justify-center">
+                                        <!-- Added float-anim class here to make image move gently -->
+                                        <img src="${p.imageUrl}" class="w-full h-full object-cover float-anim">
                                     </div>
                                     <div class="px-2 pb-2">
                                         <h3 class="font-bold text-sm truncate uppercase">${p.title}</h3>
                                         <p class="text-[10px] text-gray-400 mb-3 line-clamp-2 leading-tight">${p.description}</p>
                                         <span class="font-black text-black text-lg">Rs. ${p.price}</span>
                                         <div class="grid grid-cols-2 gap-2 mt-4" onclick="event.stopPropagation()">
-                                            <button onclick="addToCart('${p._id}')" class="bg-black text-white text-[10px] font-bold py-2 rounded-lg">CART</button>
-                                            <button onclick="window.location.href='/buy/${p._id}'" class="bg-blue-600 text-white text-[10px] font-bold py-2 rounded-lg">BUY</button>
+                                            <button onclick="addToCart('${p._id}')" class="bg-black text-white text-[10px] font-bold py-2 rounded-lg transition hover:bg-gray-800">CART</button>
+                                            <button onclick="window.location.href='/buy/${p._id}'" class="bg-blue-600 text-white text-[10px] font-bold py-2 rounded-lg transition hover:bg-blue-700">BUY</button>
                                         </div>
                                     </div>
                                 </div>
@@ -185,36 +273,13 @@
         }
 
         // Logic Helpers
-        function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('-translate-x-full');
-            document.getElementById('sidebarOverlay').classList.toggle('hidden');
-        }
-        function toggleDropdown(id) {
-            document.getElementById(id).classList.toggle('active');
-            event.currentTarget.querySelector('.fa-chevron-down').classList.toggle('rotate-180');
-        }
-        function toggleSearch() {
-            const s = document.getElementById('searchOverlay');
-            s.classList.toggle('-top-full'); s.classList.toggle('top-0');
-            if(s.classList.contains('top-0')) document.getElementById('searchInput').focus();
-        }
-        function handleSearch() {
-            const query = document.getElementById('searchInput').value.toLowerCase();
-            const filtered = allProducts.filter(p => p.title.toLowerCase().includes(query) || p.category.toLowerCase().includes(query));
-            renderGroupedHome(filtered);
-        }
-        function addToCart(id) {
-            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
-            cart.push(id); localStorage.setItem('cart', JSON.stringify(cart));
-            document.getElementById('cartCount').innerText = cart.length;
-            const t = document.getElementById('toast');
-            t.classList.add('active'); setTimeout(() => t.classList.remove('active'), 3000);
-        }
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('-translate-x-full'); document.getElementById('sidebarOverlay').classList.toggle('hidden'); }
+        function toggleDropdown(id) { document.getElementById(id).classList.toggle('active'); event.currentTarget.querySelector('.fa-chevron-down').classList.toggle('rotate-180'); }
+        function toggleSearch() { const s = document.getElementById('searchOverlay'); s.classList.toggle('-top-full'); s.classList.toggle('top-0'); if(s.classList.contains('top-0')) document.getElementById('searchInput').focus(); }
+        function handleSearch() { const query = document.getElementById('searchInput').value.toLowerCase(); const filtered = allProducts.filter(p => p.title.toLowerCase().includes(query) || p.category.toLowerCase().includes(query)); renderGroupedHome(filtered); }
+        function addToCart(id) { let cart = JSON.parse(localStorage.getItem('cart') || '[]'); cart.push(id); localStorage.setItem('cart', JSON.stringify(cart)); document.getElementById('cartCount').innerText = cart.length; const t = document.getElementById('toast'); t.classList.add('active'); setTimeout(() => t.classList.remove('active'), 3000); }
 
-        window.onload = () => {
-            loadDashboard();
-            document.getElementById('cartCount').innerText = JSON.parse(localStorage.getItem('cart') || '[]').length;
-        };
+        window.onload = () => { loadDashboard(); document.getElementById('cartCount').innerText = JSON.parse(localStorage.getItem('cart') || '[]').length; };
     </script>
 </body>
 </html>
